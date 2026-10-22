@@ -12,8 +12,8 @@ VALID_FOCUSES: list[str] = [
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("minutes", help="minutes spent practicing within a particular focus", type=int)
-parser.add_argument("focus", help="specific focus for practice session", type=str.title, choices=VALID_FOCUSES)
+parser.add_argument("--minutes", "-minutes", help="minutes spent practicing within a particular focus", type=int, required=True)
+parser.add_argument("--focus", "-focus", help="specific focus for practice session", type=str.title, choices=VALID_FOCUSES, required=True)
 
 args = parser.parse_args()
 
