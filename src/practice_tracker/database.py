@@ -1,4 +1,9 @@
 import sqlite3
+from pathlib import Path
+
+# database should be located in project root
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DB_PATH = PROJECT_ROOT / "sessions.db"
 
 def _create_table(cur: sqlite3.Cursor) -> None:
     """Create a `sessions` table if it doesn't exist."""
@@ -25,7 +30,7 @@ def _insert_session(cur: sqlite3.Cursor, minutes: int, focus: str) -> None:
 
 def initialize_database() -> None:
     """Initialize a db and create a`sessions` table."""
-    con = sqlite3.connect("sessions.db")
+    con = sqlite3.connect(DB_PATH)
 
     try:
         cur = con.cursor()
@@ -37,7 +42,7 @@ def initialize_database() -> None:
 
 def create_session(minutes: int, focus: str) -> None:
     """Save a practice session to the database."""
-    con = sqlite3.connect("sessions.db")
+    con = sqlite3.connect(DB_PATH)
 
     try:
         cur = con.cursor()
