@@ -48,10 +48,10 @@ if args.command == "log":
     print(f"You practiced {args.focus} for {args.minutes} minutes!")
 
 elif args.command == "history":
-    recent_sessions = get_sessions()
+    sessions = get_sessions()
 
-    if not recent_sessions:
+    if not sessions:
         print("No practice sessions have been logged yet.")
     else:
-        print(recent_sessions)
+        print(sessions)
 

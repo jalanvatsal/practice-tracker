@@ -5,9 +5,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "sessions.db"
 
-# latest N sessions to retrieve from db
-LATEST_N = 10
-
 def _create_table(cur: sqlite3.Cursor) -> None:
     """Create a `sessions` table if it doesn't exist."""
     cur.execute("""
@@ -36,9 +33,7 @@ def _read_sessions(cur: sqlite3.Cursor) -> list[tuple]:
         """
         SELECT * FROM sessions
         ORDER BY id DESC
-        LIMIT ?
-        """,
-        (LATEST_N, )
+        """
     )
     return cur.fetchall()
 
