@@ -5,6 +5,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "sessions.db"
 
+# latest N sessions to retrieve from db
+LATEST_N = 10
+
 def _create_table(cur: sqlite3.Cursor) -> None:
     """Create a `sessions` table if it doesn't exist."""
     cur.execute("""
@@ -28,6 +31,18 @@ def _insert_session(cur: sqlite3.Cursor, minutes: int, focus: str) -> None:
     )
 
 
+def _read_sessions(cur: sqlite3.Cursor) -> list[tuple]:
+    cur.execute(
+        """
+        SELECT * FROM sessions
+        ORDER BY id DESC
+        LIMIT ?
+        """,
+        (LATEST_N, )
+    )
+    return cur.fetchall()
+
+
 def initialize_database() -> None:
     """Initialize a db and create a`sessions` table."""
     con = sqlite3.connect(DB_PATH)
@@ -48,5 +63,17 @@ def create_session(minutes: int, focus: str) -> None:
         cur = con.cursor()
         _insert_session(cur, minutes, focus)
         con.commit()
+    finally:
+        con.close()
+
+
+def get_sessions() -> list[tuple]:
+    """Retrieve the latest logged sessions."""
+    con = sqlite3.connect(DB_PATH)
+
+    try:
+        cur = con.cursor()
+        recent_sessions = _read_sessions(cur)
+        return recent_sessions
     finally:
         con.close()
